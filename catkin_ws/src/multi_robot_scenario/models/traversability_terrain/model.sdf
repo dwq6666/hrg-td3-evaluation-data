@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="traversability_terrain">
+    <static>true</static>
+    <link name="asset_holder"/>
+  </model>
+</sdf>

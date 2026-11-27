@@ -1,0 +1,30 @@
+<launch>
+  <!--
+    论文版非结构化可通过性场景。
+    岩土贴图/岩石网格随 ROS 包一起提供，不依赖在线 Fuel 或用户模型缓存。
+
+    训练：roslaunch multi_robot_scenario paper_traversability.launch gui:=false
+    截图：roslaunch multi_robot_scenario paper_traversability.launch gui:=true
+  -->
+  <arg name="gui" default="false"/>
+  <arg name="rviz" default="false"/>
+  <arg name="robot_name" default="p3dx"/>
+  <arg name="robot_position" default="-x 0.0 -y 0.0 -z 0.10 -R 0 -P 0 -Y 0.0"/>
+
+  <include file="$(find multi_robot_scenario)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find multi_robot_scenario)/launch/paper_traversability_v6_holdout_b_v2_20261030.world"/>
+    <arg name="model_path" value="$(find multi_robot_scenario)/models:$(optenv GAZEBO_MODEL_PATH)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="false"/>
+  </include>
+
+  <group ns="$(arg robot_name)">
+    <include file="$(find multi_robot_scenario)/launch/pioneer3dx.gazebo.launch">
+      <arg name="robot_name" value="$(arg robot_name)"/>
+      <arg name="robot_position" value="$(arg robot_position)"/>
+    </include>
+  </group>
+
+  <node if="$(arg rviz)" name="paper_training_rviz" pkg="rviz" type="rviz"
+        args="-d $(find multi_robot_scenario)/launch/paper_training.rviz" output="screen"/>
+</launch>

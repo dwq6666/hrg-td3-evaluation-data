@@ -1,0 +1,53 @@
+<launch>
+
+  <arg name="robot_name" default="p3dx" />
+  <!-- [修改] 初始生成位置：在TD3地图表面上方，避免掉落 -->
+  <arg name="robot_position" default="-x 0.0 -y 0.0 -z 0.3" />
+
+
+
+    <!-- Load the URDF into the ROS Parameter Server -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find multi_robot_scenario)/xacro/p3dx/pioneer3dx.xacro'" />
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model $(arg robot_name) -param robot_description $(arg robot_position) "/>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="30.0"/>
+      <!--<param name="tf_prefix" type="string" value="$(arg robot_name)"/>-->
+    </node>
+
+    <!-- The Gazebo Velodyne plugin publishes PointCloud2 in
+         $(arg robot_name)/velodyne, while the URDF TF link is velodyne.
+         They are the same physical frame; publish an identity alias so RViz
+         and pointcloud_to_laserscan can transform the cloud to odom. -->
+    <node pkg="tf" type="static_transform_publisher" name="velodyne_frame_alias"
+          args="0 0 0 0 0 0 velodyne $(arg robot_name)/velodyne 100"/>
+  
+  <!--
+    Joint states come from libgazebo_ros_joint_state_publisher in the robot
+    model.  Starting the standalone joint_state_publisher here duplicates the
+    wheel timestamps and makes robot_state_publisher emit TF_REPEATED_DATA.
+  -->
+
+  <!-- [新增] 将Velodyne PointCloud2转换为LaserScan，用于RViz显示 -->
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+    <remap from="cloud_in" to="/velodyne_points"/>
+    <remap from="scan" to="/velodyne_scan"/>
+    <rosparam>
+      target_frame: velodyne
+      transform_tolerance: 0.01
+      min_height: -0.5
+      max_height: 1.0
+      angle_min: -1.5708
+      angle_max: 1.5708
+      angle_increment: 0.0087
+      scan_time: 0.1
+      range_min: 0.05
+      range_max: 10.0
+      use_inf: true
+      inf_epsilon: 1.0
+    </rosparam>
+  </node>
+
+</launch>

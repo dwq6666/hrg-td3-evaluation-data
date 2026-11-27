@@ -1,0 +1,50 @@
+// Bundled, deterministic textures: no Gazebo Fuel or user model cache needed.
+material Traversability/ArenaGround
+{
+  technique { pass {
+    ambient 0.78 0.78 0.78 1
+    diffuse 0.90 0.90 0.90 1
+    specular 0.02 0.02 0.02 1 8
+    texture_unit { texture ../textures/arena_concrete.png scale 0.18 0.18 }
+  } }
+}
+
+material Traversability/Soil
+{
+  technique { pass {
+    ambient 0.68 0.68 0.68 1
+    diffuse 0.86 0.86 0.86 1
+    specular 0.02 0.02 0.02 1 8
+    texture_unit { texture ../textures/soil.png scale 0.22 0.22 }
+  } }
+}
+
+material Traversability/Gravel
+{
+  technique { pass {
+    ambient 0.75 0.75 0.75 1
+    diffuse 0.90 0.90 0.90 1
+    specular 0.02 0.02 0.02 1 8
+    texture_unit { texture ../textures/gravel.png scale 0.48 0.48 }
+  } }
+}
+
+material Traversability/Sand
+{
+  technique { pass {
+    ambient 0.76 0.76 0.76 1
+    diffuse 0.90 0.90 0.90 1
+    specular 0.02 0.02 0.02 1 8
+    texture_unit { texture ../textures/sand.png scale 0.60 0.60 }
+  } }
+}
+
+material Traversability/Rock
+{
+  technique { pass {
+    ambient 0.64 0.62 0.60 1
+    diffuse 0.86 0.84 0.82 1
+    specular 0.03 0.03 0.03 1 12
+    texture_unit { texture ../textures/gravel.png scale 0.75 0.75 }
+  } }
+}

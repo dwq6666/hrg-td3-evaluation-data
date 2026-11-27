@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*.bag
+runs/
+TD3/experiments/
+catkin_ws/build*/
+catkin_ws/devel*/
+catkin_ws/install*/
